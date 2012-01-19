@@ -2,6 +2,7 @@
 
 */
 var no = "";
+var audiolet = new Audiolet();
 $(function() {
 	$( "#slider-vertical" ).slider({
 		orientation: "vertical",
@@ -12,8 +13,9 @@ $(function() {
 		slide: function( event, ui ) {
 			$( "#amount" ).val( ui.value );
 			no = ui.value;
+			playExample()
 		},
-		change: playExample
+		change: playExample()
 	});
 	$( "#amount" ).val( $( "#slider-vertical" ).slider( "value" ) );
 console.log(no);
@@ -24,9 +26,8 @@ function playExample() {
 	var notez = document.getElementById('amount').value;
 	console.log(no);
     var AudioletApp = function() {
-        this.audiolet = new Audiolet();
-        var synth = new Synth(this.audiolet, no); // Passes the group Synth this.audiolet with a frequency of 440
-        synth.connect(this.audiolet.output);
+        var synth = new Synth(audiolet, no); // Passes the group Synth this.audiolet with a frequency of 440
+        synth.connect(audiolet.output);
     };
     var Synth = function(audiolet, frequency) {
     	AudioletGroup.apply(this, [audiolet, 0,1]);
@@ -36,7 +37,7 @@ function playExample() {
         this.modulatorMulAdd = new MulAdd(this.audiolet, frequency / 2, frequency);
 
         this.gain = new Gain(this.audiolet);
-        this.envelope = new PercussiveEnvelope(this.audiolet, 1, 0.2, 0.5,
+        this.envelope = new PercussiveEnvelope(this.audiolet, 1, 0.1, 0.1,
         	function () {
         		this.audiolet.scheduler.addRelative(0, this.remove.bind(this));
         	}.bind(this)
