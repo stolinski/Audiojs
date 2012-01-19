@@ -215,7 +215,9 @@ td { vertical-align: top; }
 
 
 
-
+div {-webkit-box-shadow: 0 0 1px #fff;
+  -moz-box-shadow: 0 0 1px #fff;
+  box-shadow: 0 0 1px #fff;}
 
 
 
