@@ -35,9 +35,18 @@ function playExample() {
         this.modulator = new Saw(this.audiolet, 2 * frequency);
         this.modulatorMulAdd = new MulAdd(this.audiolet, frequency / 2, frequency);
 
+        this.gain = new Gain(this.audiolet);
+        this.envelope = new PercussiveEnvelope(this.audiolet, 1, 0.2, 0.5,
+        	function () {
+        		this.audiolet.scheduler.addRelative(0, this.remove.bind(this));
+        	}.bind(this)
+        );
+
         this.modulator.connect(this.modulatorMulAdd);
         this.modulatorMulAdd.connect(this.sine);
-        this.sine.connect(this.outputs[0]);
+        this.envelope.connect(this.gain, 0, 1);
+        this.sine.connect(this.gain);
+        this.gain.connect(this.outputs[0]);
     };
     extend(Synth, AudioletGroup);
     this.audioletApp = new AudioletApp();
